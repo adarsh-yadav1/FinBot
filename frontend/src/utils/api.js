@@ -1,7 +1,12 @@
 import axios from 'axios'
 
+// In production (Vercel), set VITE_API_URL to your Render backend URL
+// e.g. https://finbot-backend.onrender.com
+// In development, the Vite proxy handles routing so baseURL stays empty
+const BASE_URL = import.meta.env.VITE_API_URL || ''
+
 const api = axios.create({
-  baseURL: '',
+  baseURL: BASE_URL,
   timeout: 30000,
 })
 
