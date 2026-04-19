@@ -4,15 +4,24 @@ from pydantic import BaseModel
 from typing import Optional
 import uvicorn
 import uuid
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from agents.master_agent import MasterAgent
 from services.session_store import SessionStore
 
 app = FastAPI(title="FinBot API", version="1.0.0")
 
+# In production set ALLOWED_ORIGINS env var on Render to your Vercel URL
+# e.g. ALLOWED_ORIGINS=https://finbot-xyz.vercel.app
+raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000")
+origins = [o.strip() for o in raw_origins.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,4 +73,5 @@ def health():
     return {"status": "ok"}
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
