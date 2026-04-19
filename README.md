@@ -4,6 +4,9 @@
 
 ---
 
+**Live link** : https://fin-bot-azure.vercel.app/
+
+---
 ## 📐 Architecture Overview
 
 ```
